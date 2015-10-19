@@ -5,6 +5,8 @@ import tempfile
 import os
 import logging
 
+logging.basicConfig(level=logging.DEBUG)
+
 class TestHelicase(unittest.TestCase):
     def test_transcription(self):
         coding =   "atcg"
@@ -50,7 +52,7 @@ class TestHelicase(unittest.TestCase):
         logging.debug("\nBeginning Comprehensive Test.-----------")
         (handle, filename) = tempfile.mkstemp()
         handle = open(filename, "w")
-        handle.write("catgtaacc\ncatgccccccccctaatct")
+        handle.write("CATGTAACC\ncatgccccccccctaatct")
         handle.close()
         strands = helicase.load_bases_from_file(filename)
         self.assertEqual(strands, ['catgtaacc', 'catgccccccccctaatct'])

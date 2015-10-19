@@ -6,8 +6,6 @@ import sys
 import string
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
-
 # Lookup Tables
 # Ref   L    3let   Full Name
 Phe = ('F', 'Phe', 'Phenylalanine')
@@ -112,7 +110,7 @@ def frame_strand(strand):
     framed_strand = [pruned_strand[i:i+3] for i in range(0, len(pruned_strand), 3)] # Make triples
     logging.debug("Framed strand is: " + str(framed_strand))
     if len(framed_strand[-1]) < 3:
-        logging.warning("Newly framed sequence terminates with non-codon: " + framed_strand[-1])
+        logging.info("Newly framed sequence terminates with non-codon: " + framed_strand[-1])
     return framed_strand
 
 
