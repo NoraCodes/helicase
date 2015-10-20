@@ -13,6 +13,11 @@ class TestHelicase(unittest.TestCase):
         template = "tagc"
         self.assertEqual(template, helicase.transcribe(coding))
 
+    def test_transcription(self):
+        coding =   "atcg"
+        template = "uagc"
+        self.assertEqual(template, helicase.transcribe_to_rna(coding))
+
     def test_cannot_transcribe_invalid_bases(self):
         coding = "aaaccctttnggg"
         with self.assertRaises(ValueError):
