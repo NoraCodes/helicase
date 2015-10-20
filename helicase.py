@@ -5,6 +5,7 @@
 import sys
 import string
 import logging
+import argparse
 
 # Lookup Tables
 # Ref   L    3let   Full Name
@@ -194,4 +195,15 @@ def represent_polypeptide(polypeptide, level=0):
     if level > 0:
         output_string = output_string[:-separator_backspace]
     return output_string
+
+
+if __name__ == "__main__":
+    # This code will be skipped if we are a library.
+    # Define command line args
+    parser = argparse.ArgumentParser(prog="helicase.py", description="Convert sequences of DNA nucleotide bases into "+
+                                                                     "polypeptides or mRNA bases.")
+    # Determine procedure
+    # Get input
+    # Return output
+    pass
 
