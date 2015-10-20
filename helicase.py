@@ -31,7 +31,7 @@ Gly = ('G', 'Gly', 'Glycine')
 
 base_names = {'a': 'Adenine', 't': 'Thymine', 'g': 'Guanine', 'c': 'Cytosine'}
 
-codons_to_proteins = {'ttt': Phe, 'ttc': Phe,
+codons_to_amino_acids = {'ttt': Phe, 'ttc': Phe,
                       'tta': Leu, 'ttg': Leu, 'ctt': Leu, 'ctc': Leu, 'cta': Leu, 'ctg': Leu,
                       'att': Ile, 'atc': Ile, 'ata': Ile,
                       'atg': Met,
@@ -160,8 +160,8 @@ def translate_framed_strand(framed_strand):
             # We are at the end of the sequence, so cut.
             logging.debug("Stopping at codon " + codon)
             break
-        logging.debug("Adding polypeptide " + codons_to_proteins[codon][2])
-        polypeptide.append(codons_to_proteins[codon])
+        logging.debug("Adding polypeptide " + codons_to_amino_acids[codon][2])
+        polypeptide.append(codons_to_amino_acids[codon])
     return polypeptide
 
 
