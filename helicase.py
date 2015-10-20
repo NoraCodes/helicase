@@ -135,6 +135,27 @@ def transcribe(strand):
     return transcribed_strand
 
 
+def transcribe_to_rna(strand):
+    """
+    Transcribe a strand into its complementary bases of RNA
+    :param strand:
+    :return:
+    """
+    transcribed_strand = ''
+    for i in range(0, len(strand)):
+        if strand[i] == 'g':
+            transcribed_strand += 'c'
+        elif strand[i] == 'c':
+            transcribed_strand += 'g'
+        elif strand[i] =='a':
+            transcribed_strand += 'u'
+        elif strand[i] == 't':
+            transcribed_strand += 'a'
+        else:
+            raise ValueError("Tried to transcribe a strand with invalid bases.")
+    return transcribed_strand
+
+
 def translate_unframed_strand(strand):
     """
     Frame and translate a strand into a polypeptide
