@@ -19,6 +19,13 @@ for strand in strands:
     transcribed_strands.append(helicase.transcribe(strand))
 print(transcribed_strands)
 
+print("\nRNA Transcription:")
+transcribed_rna_strands = []
+for strand in strands:
+    transcribed_rna_strands.append(helicase.transcribe_to_rna(strand))
+print(transcribed_rna_strands)
+
+
 print("\nTranslation:")
 polypeptides = []
 for strand in strands:
@@ -40,6 +47,11 @@ print(terse_polypeptides)
 print("\n\nStrand -> Transcribed")
 for i in range(0, len(strands)):
     print(str(strands[i]) + " -> " + str(transcribed_strands[i]))
+
+print("\n\nStrand -> Transcribed RNA")
+for i in range(0, len(strands)):
+    print(str(strands[i]) + " -> " + str(transcribed_rna_strands[i]))
+
 
 print("\nStrand -> Polypeptide")
 for i in range(0, len(strands)):
