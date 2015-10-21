@@ -3,9 +3,10 @@
 
 # Imports
 import sys
-import string
 import logging
 import argparse
+
+
 
 # Lookup Tables
 # Ref   L    3let   Full Name
@@ -56,6 +57,8 @@ codons_to_amino_acids = {'ttt': Phe, 'ttc': Phe,
 stop_codons = ['taa', 'tag', 'tga']
 start_codon = 'atg'
 
+transcription_transtab     = str.maketrans("atcg", "tagc")
+transcription_rna_transtab = str.maketrans("atcg", "uagc")
 
 def load_bases_from_file(filename):
     """
@@ -121,18 +124,9 @@ def transcribe(strand):
     :param strand:
     :return:
     """
-    transcribed_strand = ''
-    for i in range(0, len(strand)):
-        if strand[i] == 'g':
-            transcribed_strand += 'c'
-        elif strand[i] == 'c':
-            transcribed_strand += 'g'
-        elif strand[i] =='a':
-            transcribed_strand += 't'
-        elif strand[i] == 't':
-            transcribed_strand += 'a'
-        else:
-            raise ValueError("Tried to transcribe a strand with invalid bases.")
+    if not set(strand) <= set('actg'): # actg is a subset of the strand
+        raise ValueError("Tried to transcribe strand with an invalid base.")
+    transcribed_strand = strand.translate(transcription_transtab)
     return transcribed_strand
 
 
@@ -142,18 +136,9 @@ def transcribe_to_rna(strand):
     :param strand:
     :return:
     """
-    transcribed_strand = ''
-    for i in range(0, len(strand)):
-        if strand[i] == 'g':
-            transcribed_strand += 'c'
-        elif strand[i] == 'c':
-            transcribed_strand += 'g'
-        elif strand[i] =='a':
-            transcribed_strand += 'u'
-        elif strand[i] == 't':
-            transcribed_strand += 'a'
-        else:
-            raise ValueError("Tried to transcribe a strand with invalid bases.")
+    if not set(strand) <= set('actg'): # acug is a subset of the strand
+        raise ValueError("Tried to transcribe strand with an invalid base.")
+    transcribed_strand = strand.translate(transcription_rna_transtab)
     return transcribed_strand
 
 
