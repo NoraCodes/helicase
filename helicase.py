@@ -206,13 +206,9 @@ def represent_polypeptide(polypeptide, level=0):
     else:
         raise ValueError("Representation verbosity level must be one of: SINGLE_CHAR, NORMAL, VERBOSE.")
 
-    for amino_acid in polypeptide:
-        output_string += amino_acid[level]
-        output_string += separator
-
-    if level != SINGLE_CHAR:
-        output_string = output_string[:-separator_backspace]
-    return output_string
+    amino_acid_repr_strings = [amino_acid[level] for amino_acid in polypeptide]
+    
+    return separator.join(amino_acid_repr_strings)
 
 
 if __name__ == "__main__":
