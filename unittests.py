@@ -13,7 +13,7 @@ class TestHelicase(unittest.TestCase):
         template = "tagc"
         self.assertEqual(template, helicase.transcribe(coding))
 
-    def test_transcription(self):
+    def test_transcription_to_rna(self):
         coding =   "atcg"
         template = "uagc"
         self.assertEqual(template, helicase.transcribe_to_rna(coding))
