@@ -4,7 +4,7 @@ import logging
 logging.basicConfig(level=logging.WARNING)
 
 print("Loading from File:")
-strands = helicase.load_bases_from_file("example.dna")
+strands = helicase.load_strands_from_file("example.dna")
 print(strands)
 
 print("\nFraming:")

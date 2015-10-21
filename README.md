@@ -14,7 +14,7 @@ helicase could be used thus:
 
 ```
 print("Loading from File:")
-strands = helicase.load_bases_from_file("example.dna")
+strands = helicase.load_strands_from_file("example.dna")
 print(strands)
 
 framed_strands = []

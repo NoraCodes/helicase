@@ -46,7 +46,7 @@ class TestHelicase(unittest.TestCase):
         handle = open(filename, "w")
         handle.write("catgtaacc\ncatgccccccccctaatct")
         handle.close()
-        self.assertEqual(helicase.load_bases_from_file(filename), ['catgtaacc', 'catgccccccccctaatct'])
+        self.assertEqual(helicase.load_strands_from_file(filename), ['catgtaacc', 'catgccccccccctaatct'])
         handle.close()
         os.unlink(filename)
 
@@ -66,7 +66,7 @@ class TestHelicase(unittest.TestCase):
         handle = open(filename, "w")
         handle.write("CATGTAACC\ncatgccccccccctaatct")
         handle.close()
-        strands = helicase.load_bases_from_file(filename)
+        strands = helicase.load_strands_from_file(filename)
         self.assertEqual(strands, ['catgtaacc', 'catgccccccccctaatct'])
         framed_strands = []
         for strand in strands:

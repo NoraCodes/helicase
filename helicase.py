@@ -75,7 +75,8 @@ transcription_transtab = str.maketrans("{}{}{}{}".format(Bases.Adenine, Bases.Th
 transcription_rna_transtab = str.maketrans("{}{}{}{}".format(Bases.Adenine, Bases.Thymine, Bases.Cytosine, Bases.Guanine),
                                            "{}{}{}{}".format(Bases.Uracil, Bases.Adenine, Bases.Guanine, Bases.Cytosine))
 
-def load_bases_from_file(filename):
+
+def load_strands_from_file(filename):
     """
     Load bases from the file specified by filename.
     Produce a list of strings, where each string is a valid
@@ -83,18 +84,13 @@ def load_bases_from_file(filename):
     allowed = "{}{}{}{}".format(Bases.Adenine, Bases.Cytosine, Bases.Thymine, Bases.Guanine)
     converted_strands = []
 
-    try:
-        bases_file = open(filename, 'r')
-    except OSError:
-        sys.exit(1) # Exit with an "other" error.
-
-    for line in bases_file:
-        lower_line = line.lower().strip("\n\t ")
-        if not set(lower_line) <= set(allowed):
-            raise ValueError("File " + filename + " contains invalid base name. Remember: DNA not RNA, so no Uracil.")
-        # If we reach this point, the strand is valid
-        converted_strands.append(lower_line)
-    bases_file.close()
+    with open(filename, 'r') as strands_file:
+        for line in strands_file:
+            lower_line = line.lower().strip("\n\t ")
+            if not set(lower_line) <= set(allowed):
+                raise ValueError("File " + filename + " contains invalid base name. Remember: DNA not RNA, so no Uracil.")
+            # If we reach this point, the strand is valid
+            converted_strands.append(lower_line)
     logging.info("Validated and loaded " + str(len(converted_strands)) + " strands from " + filename + ".")
     return converted_strands
 
