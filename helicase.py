@@ -7,6 +7,11 @@ import logging
 import argparse
 
 
+# Verbosity levels
+SINGLE_CHAR = 0
+NORMAL = 1
+VERBOSE = 2
+
 
 # Lookup Tables
 # Ref   L    3let   Full Name
@@ -31,7 +36,13 @@ Trp = ('W', 'Trp', 'Tryptophan')
 Arg = ('R', 'Arg', 'Arginine')
 Gly = ('G', 'Gly', 'Glycine')
 
-base_names = {'a': 'Adenine', 't': 'Thymine', 'g': 'Guanine', 'c': 'Cytosine'}
+
+class Bases: # Can be used as Bases.Adenine
+    Adenine = 'a'
+    Thymine = 't'
+    Guanine = 'g'
+    Cytosine = 'c'
+    Uracil = 'u'
 
 codons_to_amino_acids = {'ttt': Phe, 'ttc': Phe,
                       'tta': Leu, 'ttg': Leu, 'ctt': Leu, 'ctc': Leu, 'cta': Leu, 'ctg': Leu,
@@ -54,18 +65,22 @@ codons_to_amino_acids = {'ttt': Phe, 'ttc': Phe,
                       'cgt': Arg, 'cgc': Arg, 'cga': Arg, 'cgg': Arg, 'aga': Arg, 'agg': Arg,
                       'agt': Ser, 'agc': Ser,
                       'ggt': Gly, 'ggc': Gly, 'gga': Gly, 'ggg': Gly}
-stop_codons = ['taa', 'tag', 'tga']
-start_codon = 'atg'
+stop_codons = ['{}{}{}'.format(Bases.Thymine, Bases.Adenine, Bases.Adenine),
+               '{}{}{}'.format(Bases.Thymine, Bases.Adenine, Bases.Guanine),
+               '{}{}{}'.format(Bases.Thymine, Bases.Guanine, Bases.Adenine)]
+start_codon = '{}{}{}'.format(Bases.Adenine, Bases.Thymine, Bases.Guanine)
 
-transcription_transtab     = str.maketrans("atcg", "tagc")
-transcription_rna_transtab = str.maketrans("atcg", "uagc")
+transcription_transtab = str.maketrans("{}{}{}{}".format(Bases.Adenine, Bases.Thymine, Bases.Cytosine, Bases.Guanine),
+                                       "{}{}{}{}".format(Bases.Thymine, Bases.Adenine, Bases.Guanine, Bases.Cytosine))
+transcription_rna_transtab = str.maketrans("{}{}{}{}".format(Bases.Adenine, Bases.Thymine, Bases.Cytosine, Bases.Guanine),
+                                           "{}{}{}{}".format(Bases.Uracil, Bases.Adenine, Bases.Guanine, Bases.Cytosine))
 
 def load_bases_from_file(filename):
     """
     Load bases from the file specified by filename.
     Produce a list of strings, where each string is a valid
     """
-    allowed = {'a', 'c', 't', 'g'}
+    allowed = "{}{}{}{}".format(Bases.Adenine, Bases.Cytosine, Bases.Thymine, Bases.Guanine)
     converted_strands = []
 
     try:
@@ -75,9 +90,8 @@ def load_bases_from_file(filename):
 
     for line in bases_file:
         lower_line = line.lower().strip("\n\t ")
-        for letter in lower_line:
-            if not letter in allowed:
-                raise ValueError("File " + filename + " contains invalid base name" + letter + ". Remember: DNA not RNA, so no Uracil.")
+        if not set(lower_line) <= set(allowed):
+            raise ValueError("File " + filename + " contains invalid base name. Remember: DNA not RNA, so no Uracil.")
         # If we reach this point, the strand is valid
         converted_strands.append(lower_line)
     bases_file.close()
@@ -124,7 +138,8 @@ def transcribe(strand):
     :param strand:
     :return:
     """
-    if not set(strand) <= set('actg'): # actg is a subset of the strand
+    # First, validate input
+    if not set(strand) <= set('{}{}{}{}'.format(Bases.Adenine, Bases.Thymine, Bases.Cytosine, Bases.Guanine)):
         raise ValueError("Tried to transcribe strand with an invalid base.")
     transcribed_strand = strand.translate(transcription_transtab)
     return transcribed_strand
@@ -136,7 +151,8 @@ def transcribe_to_rna(strand):
     :param strand:
     :return:
     """
-    if not set(strand) <= set('actg'): # acug is a subset of the strand
+    # First, validate input
+    if not set(strand) <= set('{}{}{}{}'.format(Bases.Adenine, Bases.Thymine, Bases.Cytosine, Bases.Guanine)):
         raise ValueError("Tried to transcribe strand with an invalid base.")
     transcribed_strand = strand.translate(transcription_rna_transtab)
     return transcribed_strand
@@ -182,23 +198,23 @@ def represent_polypeptide(polypeptide, level=0):
     output_string = ""
     separator = ""
     separator_backspace = 0
-    if level == 0:
+    if level == SINGLE_CHAR:
         separator = ""
         separator_backspace = 0
-    elif level == 1:
+    elif level == NORMAL:
         separator = "/"
         separator_backspace = 1
-    elif level == 2:
+    elif level == VERBOSE:
         separator = ", "
         separator_backspace = 2
     else:
-        raise ValueError("Representation verbosity level must be one of: 0, 1, 2.")
+        raise ValueError("Representation verbosity level must be one of: SINGLE_CHAR, NORMAL, VERBOSE.")
 
     for amino_acid in polypeptide:
         output_string += amino_acid[level]
         output_string += separator
 
-    if level > 0:
+    if level != SINGLE_CHAR:
         output_string = output_string[:-separator_backspace]
     return output_string
 

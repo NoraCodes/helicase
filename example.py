@@ -29,19 +29,19 @@ print(transcribed_rna_strands)
 print("\nTranslation:")
 polypeptides = []
 for strand in strands:
-    polypeptides.append(helicase.represent_polypeptide(helicase.translate_unframed_strand(strand),1))
+    polypeptides.append(helicase.represent_polypeptide(helicase.translate_unframed_strand(strand),helicase.NORMAL))
 print(polypeptides)
 
 print("\nVerbose Translation:")
 verbose_polypeptides = []
 for strand in strands:
-    verbose_polypeptides.append(helicase.represent_polypeptide(helicase.translate_unframed_strand(strand),2))
+    verbose_polypeptides.append(helicase.represent_polypeptide(helicase.translate_unframed_strand(strand),helicase.VERBOSE))
 print(verbose_polypeptides)
 
 print("\nTerse Translation:")
 terse_polypeptides = []
 for strand in strands:
-    terse_polypeptides.append(helicase.represent_polypeptide(helicase.translate_unframed_strand(strand),0))
+    terse_polypeptides.append(helicase.represent_polypeptide(helicase.translate_unframed_strand(strand),helicase.SINGLE_CHAR))
 print(terse_polypeptides)
 
 print("\n\nStrand -> Transcribed")
