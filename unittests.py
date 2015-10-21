@@ -7,13 +7,14 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 class TestHelicase(unittest.TestCase):
     def test_transcription(self):
         coding =   "atcg"
         template = "tagc"
         self.assertEqual(template, helicase.transcribe(coding))
 
-    def test_transcription(self):
+    def test_transcription_to_rna(self):
         coding =   "atcg"
         template = "uagc"
         self.assertEqual(template, helicase.transcribe_to_rna(coding))
@@ -23,6 +24,11 @@ class TestHelicase(unittest.TestCase):
         with self.assertRaises(ValueError):
             helicase.transcribe(coding)
 
+    def test_cannot_transcribe_invalid_bases_to_rna(self):
+        coding = "aaaccctttnggg"
+        with self.assertRaises(ValueError):
+            helicase.transcribe_to_rna(coding)
+
     def test_frame_strand(self):
         self.assertEqual(helicase.frame_strand('catgccccccccctaatct'), ['atg', 'ccc', 'ccc', 'ccc', 'taa', 'tct'])
 
@@ -30,6 +36,7 @@ class TestHelicase(unittest.TestCase):
         framed_strand = helicase.frame_strand('catgccccccccctaatct')
         self.assertEqual(helicase.translate_framed_strand(framed_strand), [helicase.Met, helicase.Pro, helicase.Pro,
                                                                            helicase.Pro])
+
     def test_translate_unframed_strand(self):
         self.assertEqual(helicase.translate_unframed_strand('catgccccccccctaatct'), [helicase.Met, helicase.Pro,
                                                                                      helicase.Pro, helicase.Pro])
@@ -49,9 +56,9 @@ class TestHelicase(unittest.TestCase):
 
     def test_represent_polypeptide(self):
         polypeptide = [helicase.Met, helicase.Pro, helicase.Cys]
-        self.assertEqual(helicase.represent_polypeptide(polypeptide, 0), "MPC")
-        self.assertEqual(helicase.represent_polypeptide(polypeptide, 1), "Met/Pro/Cys")
-        self.assertEqual(helicase.represent_polypeptide(polypeptide, 2), "Methionine, Proline, Cysteine")
+        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.SINGLE_CHAR), "MPC")
+        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.NORMAL), "Met/Pro/Cys")
+        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.VERBOSE), "Methionine, Proline, Cysteine")
 
     def test_comprehensive(self):
         logging.debug("\nBeginning Comprehensive Test.-----------")
