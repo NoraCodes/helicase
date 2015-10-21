@@ -7,6 +7,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 class TestHelicase(unittest.TestCase):
     def test_transcription(self):
         coding =   "atcg"
@@ -22,6 +23,11 @@ class TestHelicase(unittest.TestCase):
         coding = "aaaccctttnggg"
         with self.assertRaises(ValueError):
             helicase.transcribe(coding)
+
+    def test_cannot_transcribe_invalid_bases_to_rna(self):
+        coding = "aaaccctttnggg"
+        with self.assertRaises(ValueError):
+            helicase.transcribe_to_rna(coding)
 
     def test_frame_strand(self):
         self.assertEqual(helicase.frame_strand('catgccccccccctaatct'), ['atg', 'ccc', 'ccc', 'ccc', 'taa', 'tct'])
