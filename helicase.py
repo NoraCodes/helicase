@@ -3,38 +3,40 @@
 
 # Imports
 import sys
+from collections import namedtuple
 import logging
 import argparse
 
 
 # Verbosity levels
-SINGLE_CHAR = 0
-NORMAL = 1
-VERBOSE = 2
+IUPAC_1 = 0
+IUPAC_3 = 1
+FULL_NAME = 2
 
+AminoAcid = namedtuple("AminoAcid", ["IUPAC_1", "IUPAC_3", "full_name"])
 
 # Lookup Tables
 # Ref   L    3let   Full Name
-Phe = ('F', 'Phe', 'Phenylalanine')
-Leu = ('L', 'Leu', 'Leucine')
-Ile = ('I', 'Ile', 'Isoleucine')
-Met = ('M', 'Met', 'Methionine')
-Val = ('V', 'Val', 'Valine')
-Ser = ('S', 'Ser', 'Serine')
-Pro = ('P', 'Pro', 'Proline')
-Thr = ('T', 'Thr', 'Threonine')
-Ala = ('A', 'Ala', 'Alanine')
-Tyr = ('Y', 'Tyr', 'Tyrosine')
-His = ('H', 'His', 'Histidine')
-Gln = ('Q', 'Gln', 'Glutamine')
-Asn = ('N', 'Asn', 'Asparagine')
-Lys = ('K', 'Lys', 'Lysine')
-Asp = ('D', 'Asp', 'Aspartic acid')
-Glu = ('E', 'Glu', 'Glutamic acid')
-Cys = ('C', 'Cys', 'Cysteine')
-Trp = ('W', 'Trp', 'Tryptophan')
-Arg = ('R', 'Arg', 'Arginine')
-Gly = ('G', 'Gly', 'Glycine')
+Phe = AminoAcid('F', 'Phe', 'Phenylalanine')
+Leu = AminoAcid('L', 'Leu', 'Leucine')
+Ile = AminoAcid('I', 'Ile', 'Isoleucine')
+Met = AminoAcid('M', 'Met', 'Methionine')
+Val = AminoAcid('V', 'Val', 'Valine')
+Ser = AminoAcid('S', 'Ser', 'Serine')
+Pro = AminoAcid('P', 'Pro', 'Proline')
+Thr = AminoAcid('T', 'Thr', 'Threonine')
+Ala = AminoAcid('A', 'Ala', 'Alanine')
+Tyr = AminoAcid('Y', 'Tyr', 'Tyrosine')
+His = AminoAcid('H', 'His', 'Histidine')
+Gln = AminoAcid('Q', 'Gln', 'Glutamine')
+Asn = AminoAcid('N', 'Asn', 'Asparagine')
+Lys = AminoAcid('K', 'Lys', 'Lysine')
+Asp = AminoAcid('D', 'Asp', 'Aspartic acid')
+Glu = AminoAcid('E', 'Glu', 'Glutamic acid')
+Cys = AminoAcid('C', 'Cys', 'Cysteine')
+Trp = AminoAcid('W', 'Trp', 'Tryptophan')
+Arg = AminoAcid('R', 'Arg', 'Arginine')
+Gly = AminoAcid('G', 'Gly', 'Glycine')
 
 
 class Bases: # Can be used as Bases.Adenine
@@ -184,7 +186,7 @@ def translate_framed_strand(framed_strand):
     return polypeptide
 
 
-def represent_polypeptide(polypeptide, level=0):
+def represent_polypeptide(polypeptide, verbosity_level=0):
     """
     Represent a polypeptide as a string.
     :param polypeptide: A list of peptide 3-tuples
@@ -194,19 +196,17 @@ def represent_polypeptide(polypeptide, level=0):
     output_string = ""
     separator = ""
     separator_backspace = 0
-    if level == SINGLE_CHAR:
+    if verbosity_level == IUPAC_1:
         separator = ""
-        separator_backspace = 0
-    elif level == NORMAL:
+        amino_acid_repr_strings = [amino_acid.IUPAC_1 for amino_acid in polypeptide]
+    elif verbosity_level == IUPAC_3:
         separator = "/"
-        separator_backspace = 1
-    elif level == VERBOSE:
+        amino_acid_repr_strings = [amino_acid.IUPAC_3 for amino_acid in polypeptide]
+    elif verbosity_level == FULL_NAME:
         separator = ", "
-        separator_backspace = 2
+        amino_acid_repr_strings = [amino_acid.full_name for amino_acid in polypeptide]
     else:
-        raise ValueError("Representation verbosity level must be one of: SINGLE_CHAR, NORMAL, VERBOSE.")
-
-    amino_acid_repr_strings = [amino_acid[level] for amino_acid in polypeptide]
+        raise ValueError("Representation verbosity level must be one of: IUPAC_1, IUPAC_3, FULL_NAME.")
     
     return separator.join(amino_acid_repr_strings)
 
