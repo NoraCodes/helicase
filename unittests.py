@@ -56,9 +56,9 @@ class TestHelicase(unittest.TestCase):
 
     def test_represent_polypeptide(self):
         polypeptide = [helicase.Met, helicase.Pro, helicase.Cys]
-        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.SINGLE_CHAR), "MPC")
-        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.NORMAL), "Met/Pro/Cys")
-        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.VERBOSE), "Methionine, Proline, Cysteine")
+        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.IUPAC_1), "MPC")
+        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.IUPAC_3), "Met/Pro/Cys")
+        self.assertEqual(helicase.represent_polypeptide(polypeptide, helicase.FULL_NAME), "Methionine, Proline, Cysteine")
 
     def test_comprehensive(self):
         logging.debug("\nBeginning Comprehensive Test.-----------")
