@@ -87,13 +87,31 @@ def load_strands_from_file(filename):
     converted_strands = []
 
     with open(filename, 'r') as strands_file:
-        for line in strands_file:
-            lower_line = line.lower().strip("\n\t ")
-            if not set(lower_line) <= set(allowed):
-                raise ValueError("File " + filename + " contains invalid base name. Remember: DNA not RNA, so no Uracil.")
+        return load_strands([strand for strand in strands_file]) # There may be a better way to do this.
+
+
+def load_strands_from_string(strands_string, seperator='\n'):
+    """
+    Load bases from a string, splitting on newlines.
+    Produce a list of strings, where each string is a valid
+    """
+    return load_strands([strand for strand in strands_string.split(seperator)])
+
+
+def load_strands(raw_strands):
+    """
+    Load bases from each strand in a list of strands.
+    Produce a list of strings, where each string is a valid
+    """
+    allowed = "{}{}{}{}".format(Bases.Adenine, Bases.Cytosine, Bases.Thymine, Bases.Guanine)
+    converted_strands = []
+
+    for raw_strand in raw_strands:
+            lower_strand = raw_strand.lower().strip("\n\t ")
+            if not set(lower_strand) <= set(allowed):
+                raise ValueError("Strand contains invalid base name. Remember: DNA not RNA, so no Uracil.")
             # If we reach this point, the strand is valid
-            converted_strands.append(lower_line)
-    logging.info("Validated and loaded " + str(len(converted_strands)) + " strands from " + filename + ".")
+            converted_strands.append(lower_strand)
     return converted_strands
 
 

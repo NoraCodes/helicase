@@ -41,6 +41,10 @@ class TestHelicase(unittest.TestCase):
         self.assertEqual(helicase.translate_unframed_strand('catgccccccccctaatct'), [helicase.Met, helicase.Pro,
                                                                                      helicase.Pro, helicase.Pro])
 
+    def test_load_from_string(self):
+        self.assertEqual(helicase.load_strands_from_string("catgtaacc\ncatgccccccccctaatct"), ['catgtaacc', 'catgccccccccctaatct'])
+        self.assertEqual(helicase.load_strands_from_string("catgtaacc\tcatgccccccccctaatct", seperator = '\t'), ['catgtaacc', 'catgccccccccctaatct'])
+
     def test_load_from_file(self):
         (handle, filename) = tempfile.mkstemp()
         handle = open(filename, "w")
