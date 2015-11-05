@@ -139,7 +139,7 @@ def frame_strand(strand):
     if frame_begin == -1:
         # In this case, there is no valid frame in the strand. Return an empty list.
         logging.info("No valid frame in strand.")
-        return []
+        return [], 0
     pruned_strand = strand[frame_begin:]
     framed_strand = [pruned_strand[i:i+3] for i in range(0, len(pruned_strand), 3)] # Make triples
     logging.debug("Framed strand is: " + str(framed_strand))
