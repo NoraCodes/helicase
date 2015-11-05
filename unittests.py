@@ -35,11 +35,11 @@ class TestHelicase(unittest.TestCase):
 
     def test_frame_strand(self):
         print("\nBeginning Framing Test.")
-        self.assertEqual(helicase.frame_strand('catgccccccccctaatct'), ['atg', 'ccc', 'ccc', 'ccc', 'taa', 'tct'])
+        self.assertEqual(helicase.frame_strand('catgccccccccctaatct'), (['atg', 'ccc', 'ccc', 'ccc', 'taa', 'tct'], 1))
 
     def test_translate_framed_strand(self):
         print("\nBeginning Framed Translation Test.")
-        framed_strand = helicase.frame_strand('catgccccccccctaatct')
+        framed_strand = helicase.frame_strand('catgccccccccctaatct')[0]
         self.assertEqual(helicase.translate_framed_strand(framed_strand), [helicase.Met, helicase.Pro, helicase.Pro,
                                                                            helicase.Pro])
 
@@ -85,10 +85,10 @@ class TestHelicase(unittest.TestCase):
         framed_strands = []
         for strand in strands:
             framed_strands.append(helicase.frame_strand(strand))
-        self.assertEqual(framed_strands, [['atg', 'taa', 'cc'], ['atg', 'ccc', 'ccc', 'ccc', 'taa', 'tct']])
+        self.assertEqual(framed_strands, [(['atg', 'taa', 'cc'], 1), (['atg', 'ccc', 'ccc', 'ccc', 'taa', 'tct'], 1)])
         polypeptides = []
         for strand in framed_strands:
-            polypeptides.append(helicase.translate_framed_strand(strand))
+            polypeptides.append(helicase.translate_framed_strand(strand[0]))
         self.assertEqual(polypeptides, [[('M', 'Met', 'Methionine')], [('M', 'Met', 'Methionine'),
                                                                        ('P', 'Pro', 'Proline'), ('P', 'Pro', 'Proline'),
                                                                        ('P', 'Pro', 'Proline')]])

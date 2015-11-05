@@ -47,15 +47,15 @@ class Bases: # Can be used as Bases.Adenine
     Uracil = 'u'
 
 codons_to_amino_acids = {'ttt': Phe, 'ttc': Phe,
-                      'tta': Leu, 'ttg': Leu, 'ctt': Leu, 'ctc': Leu, 'cta': Leu, 'ctg': Leu,
-                      'att': Ile, 'atc': Ile, 'ata': Ile,
-                      'atg': Met,
-                      'gtt': Val, 'gtc': Val, 'gta': Val, 'gtg': Val,
-                      'tct': Ser, 'tcc': Ser, 'tca': Ser, 'tcg': Ser,
-                      'cct': Pro, 'ccc': Pro, 'cca': Pro, 'ccg': Pro,
-                      'act': Thr, 'acc': Thr, 'aca': Thr, 'acg': Thr,
-                      'gct': Ala, 'gcc': Ala, 'gca': Ala, 'gcg': Ala,
-                      'tat': Tyr, 'tac': Tyr,
+                         'tta': Leu, 'ttg': Leu, 'ctt': Leu, 'ctc': Leu, 'cta': Leu, 'ctg': Leu,
+                         'att': Ile, 'atc': Ile, 'ata': Ile,
+                         'atg': Met,
+                         'gtt': Val, 'gtc': Val, 'gta': Val, 'gtg': Val,
+                         'tct': Ser, 'tcc': Ser, 'tca': Ser, 'tcg': Ser,
+                         'cct': Pro, 'ccc': Pro, 'cca': Pro, 'ccg': Pro,
+                         'act': Thr, 'acc': Thr, 'aca': Thr, 'acg': Thr,
+                         'gct': Ala, 'gcc': Ala, 'gca': Ala, 'gcg': Ala,
+                         'tat': Tyr, 'tac': Tyr,
                       'cat': His, 'cac': His,
                       'caa': Gln, 'cag': Gln,
                       'aat': Asn, 'aac': Asn,
@@ -145,7 +145,7 @@ def frame_strand(strand):
     logging.debug("Framed strand is: " + str(framed_strand))
     if len(framed_strand[-1]) < 3:
         logging.info("Newly framed sequence terminates with non-codon: " + framed_strand[-1])
-    return framed_strand
+    return framed_strand, frame_begin
 
 
 def transcribe(strand):
@@ -180,7 +180,7 @@ def translate_unframed_strand(strand):
     :param strand: The unframed strand to translate
     :return: A list of amino acids
     """
-    framed_strand = frame_strand(strand)
+    framed_strand = frame_strand(strand)[0] # Discard offset, we don't use it here
     return translate_framed_strand(framed_strand)
 
 
@@ -195,6 +195,8 @@ def translate_framed_strand(framed_strand):
     # Iterate through all the codons in our strand and look up their resultant amino acid
     logging.info("Translating strand: " + str(framed_strand))
     for codon in framed_strand:
+        if len(codon) != 3:
+            break
         if codon in stop_codons:
             # We are at the end of the sequence, so cut.
             logging.debug("Stopping at codon " + codon)
